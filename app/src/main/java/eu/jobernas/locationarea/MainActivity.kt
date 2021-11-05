@@ -7,6 +7,7 @@ import android.view.View
 import eu.jobernas.locationarea.databinding.ActivityMainBinding
 import eu.jobernas.locationarea.location.LocationService
 
+
 class MainActivity: AppCompatActivity(),
             View.OnClickListener {
 
@@ -42,10 +43,14 @@ class MainActivity: AppCompatActivity(),
      * @param view
      */
     override fun onClick(view: View?) {
-        if (isMyServiceRunning(LocationService::class.java))
-            stopService(Intent())
-        else
-            startService(Intent())
+        if (isMyServiceRunning(LocationService::class.java)) {
+            binding?.handleServiceButton?.text = getString(R.string.lb_start_service)
+            stopService(Intent(this@MainActivity, LocationService::class.java))
+
+        } else {
+            binding?.handleServiceButton?.text = getString(R.string.lb_stop_service)
+            startService(Intent(this@MainActivity, LocationService::class.java))
+        }
     }
 
     /**

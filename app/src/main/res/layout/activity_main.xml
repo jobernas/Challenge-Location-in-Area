@@ -11,7 +11,7 @@
         android:id="@+id/messageTextView"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:background="#FA0000"
+        android:background="#AAFF0000"
         android:gravity="center"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@id/handleServiceButton"

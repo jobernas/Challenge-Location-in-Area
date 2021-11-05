@@ -2,7 +2,6 @@ package eu.jobernas.locationarea.location
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -15,7 +14,7 @@ import com.google.android.gms.location.*
 import eu.jobernas.locationarea.AppConfig
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-class UserLocationManager(private var activity: Activity) {
+class UserLocationManager(private var context: Context) {
 
     companion object {
         private const val TAG = "LOCATION_MANAGER"
@@ -26,7 +25,7 @@ class UserLocationManager(private var activity: Activity) {
 
     private var isSearching: Boolean = false
     private var fusedLocationClient: FusedLocationProviderClient =
-        LocationServices.getFusedLocationProviderClient(activity)
+        LocationServices.getFusedLocationProviderClient(context)
 
     private var locationRequest: LocationRequest =
         LocationRequest.create().apply {
@@ -108,12 +107,12 @@ class UserLocationManager(private var activity: Activity) {
     fun isLocationEnabled(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             // This is new method provided in API 28
-            val lm = activity.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
-            lm?.isLocationEnabled ?: false
+            val lm = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
+            lm?.isLocationEnabled == true
         } else {
             // This is Deprecated in API 28
             val mode: Int = Settings.Secure.getInt(
-                activity.contentResolver, Settings.Secure.LOCATION_MODE,
+                context.contentResolver, Settings.Secure.LOCATION_MODE,
                 Settings.Secure.LOCATION_MODE_OFF
             )
             mode != Settings.Secure.LOCATION_MODE_OFF
@@ -121,7 +120,7 @@ class UserLocationManager(private var activity: Activity) {
     }
 
     // Check Location Permissions
-    private fun checkPermissions(): Boolean = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+    private fun checkPermissions(): Boolean = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
 
 }

@@ -4,9 +4,12 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
+import com.google.android.gms.maps.model.LatLng
+import eu.jobernas.locationarea.BuildConfig
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 class LocationService: Service() {
 
@@ -18,6 +21,7 @@ class LocationService: Service() {
      * Private Vars
      */
     private var compositeDisposable: CompositeDisposable? = null
+    private var userLocationManager: UserLocationManager? = null
 
     /**
      * Super Methods
@@ -28,6 +32,7 @@ class LocationService: Service() {
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "onCreate")
+        userLocationManager = UserLocationManager(this)
         compositeDisposable = CompositeDisposable()
         addUserLocationObservable()
     }
@@ -50,12 +55,20 @@ class LocationService: Service() {
         val disposable = UserLocationManager
             .lastLocation
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
+            .throttleLast(30, TimeUnit.SECONDS) // 1st Filter, Time Filter
+            .observeOn(Schedulers.computation())
+            .subscribe { userLocation ->
+                Log.d(TAG, "Location: ${userLocation.latitude}, ${userLocation.longitude}")
+                val location = LatLng(userLocation.latitude, userLocation.longitude)
+
+                // 2st Filter - Check if location is inside last location known
+                if (Utils.isPointInQuadrant())
 
             }
         compositeDisposable?.add(disposable)
     }
+
+    private fun
 
 
 }
