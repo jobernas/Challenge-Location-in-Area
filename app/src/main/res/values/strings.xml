@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Location in Specific area</string>
+    <string name="placeholder">"Hello World"</string>
+    <string name="lb_start_service">"Start Service"</string>
+    <string name="lb_stop_service">"Stop Service"</string>
+    <string name="lb_searching_for_areas">"Searching for areas in your location"</string>
 </resources>
